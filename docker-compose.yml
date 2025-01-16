@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  Data_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Data_server_test
+    
+    volumes:
+      - .:/bnviit-vision-query-fastapi
+    ports:
+      - 8999:8080
+    environment :
+      SM_HOST : ${SM_HOST}
+      SM_USER : ${SM_USER}
+      SM_PASSWORD : ${SM_PASSWORD}
+      SM_DB : ${SM_DB}
+      MD_HOST: ${MD_HOST}
+      MD_USER: ${MD_USER}
+      MD_PASSWORD: ${MD_PASSWORD}
+      MD_DB: ${MD_DB}
+    restart: always
+#     networks:
+#       query_network:
+#         ipv4_address: "172.31.0.66"
+# networks: 
+#   query_network:
+#     driver: bridge
+#     ipam:
+#       config:
+#         - subnet: "172.31.0.64/28"
+#           gateway: "172.31.0.65"
