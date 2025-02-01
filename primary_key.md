@@ -36,3 +36,8 @@ https://acait.tistory.com/77?category=1093794
 커서가 필요한 삽입 SQL : 여러 행을 결과로 반환하는 SELECT
 EXEC SQL DECLARE product_cursor CURSOR FOR SELECT 
 EXEC SQL OPEN 
+
+데이터베이스의 논리적 설계
+릴레이션 스키마 변환 규칙
+규칙 1~5번
+
