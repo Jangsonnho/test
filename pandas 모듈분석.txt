@@ -1,0 +1,84 @@
+Pandas 라이브러리
+│
+├── 모듈 (Module) - pandas.core.frame, pandas.core.series, pandas.io, pandas.plotting 등
+│   │
+│   ├── 클래스 (Class) - DataFrame, Series, Index 등
+│   │   │
+│   │   ├── 속성 (Attribute) - DataFrame.columns, Series.name 등
+│   │   │
+│   │   ├── 메서드 (Method) - DataFrame.head(), Series.mean(), DataFrame.apply() 등
+│   │   │
+│   │   ├── 파라미터 (Parameter) - dtype, axis, inplace 등
+│   │   │
+│   │   └── 객체 (Instance) - df = DataFrame(), s = Series() 등
+│   │
+│   ├── 함수 (Function) - read_csv(), to_datetime(), merge(), concat() 등
+│   │
+│   ├── 변수 (Variable) - pandas.options, pandas.NA, pandas.Timedelta 등
+│   │
+│   └── 서브 모듈 (Submodule) - pandas.plotting, pandas.io.json 등
+
+모듈 : pandas.io : 파일 입출력 관련기능, pandas.plotting : pandas 시각화 관련 기능
+클래스 : Index : 행 또는 열의 라벨 정보 저장
+
+import numpy as np
+import pandas._libs.lib as lib
+from pandas.core.dtypes.generic import ABCDataFrame
+from pandas.core.indexes.base import Index
+from pandas.core.series import Series
+
+class DataFrame:
+    """
+    Two-dimensional, size-mutable, heterogeneous tabular data structure.
+
+    Attributes:
+        columns (Index): 열의 라벨 정보
+        index (Index): 행의 라벨 정보
+        values (ndarray): 데이터 값 (numpy 배열)
+    """
+
+    def __init__(self, data=None, index=None, columns=None, dtype=None, copy=False):
+        """
+        Initialize a new DataFrame instance.
+
+        Parameters:
+            data (dict, list, ndarray, etc.): 입력 데이터
+            index (Index, optional): 행 라벨
+            columns (Index, optional): 열 라벨
+            dtype (dtype, optional): 데이터 타입
+            copy (bool, default=False): 데이터 복사 여부
+        """
+        if data is None:
+            data = {}
+
+        self.data = np.array(data) if isinstance(data, (list, np.ndarray)) else data
+        self.index = index if index is not None else Index(range(len(data)))
+        self.columns = columns if columns is not None else Index(range(len(data[0])))
+
+    def head(self, n=5):
+        """
+        Return the first `n` rows of the DataFrame.
+
+        Parameters:
+            n (int, default=5): 가져올 행 개수
+
+        Returns:
+            DataFrame: 선택된 행을 포함하는 새로운 DataFrame
+        """
+        return DataFrame(self.data[:n], index=self.index[:n], columns=self.columns)
+
+    def apply(self, func, axis=0):
+        """
+        Apply a function along an axis of the DataFrame.
+
+        Parameters:
+            func (function): 적용할 함수
+            axis (int, default=0): 0이면 열 기준, 1이면 행 기준
+
+        Returns:
+            DataFrame: 변환된 결과를 포함하는 DataFrame
+        """
+        if axis == 0:
+            return DataFrame([func(col) for col in self.data.T], index=self.columns)
+        else:
+            return DataFrame([func(row) for row in self.data], index=self.index)
